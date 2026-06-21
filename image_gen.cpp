@@ -15,10 +15,11 @@ int main(){
         outFile << "P6\n" << image_width << " " << image_height << "\n255\n";
 
         for(int y=0;y<image_height;y++){
+            std::clog << "\rScanline remaining:" << (image_height-y) << " " << std::flush;
             for(int x=0;x<image_width;x++){
                 double r=double(x)/(image_width-1);
-                double g=double(y)/(image_height-1);
-                double b=0.0;
+                double g=0.0;
+                double b=double(y)/(image_height-1);
 
                 int ir=int(255*r);
                 int ig=int(255*g);
@@ -30,7 +31,7 @@ int main(){
             }
         }
         outFile.close();
-        std::cout << "Image generated successfully as 'output.ppm'" << std::endl;
+        std::clog << "\rDone.                   \n";
     }
     catch(...){
         std::cout << "Caught an unhandled exception\n";

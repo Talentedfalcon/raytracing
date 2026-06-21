@@ -21,6 +21,7 @@ int render(vector<Pixel> image,int image_width,int image_height){
         outFile << "P6\n" << image_width << " " << image_height << "\n255\n";
     
         for(int y=0;y<image_height;y++){
+            std::clog << "\rScanline remaining:" << (image_height-y) << " " << std::flush;
             for(int x=0;x<image_width;x++){
                 int index=y*image_width+x;
                 outFile.put(image[index].r);
@@ -29,8 +30,7 @@ int render(vector<Pixel> image,int image_width,int image_height){
             }
         }
         outFile.close();
-    
-        cout << "Image generated successfully as 'output.ppm'" << endl;
+        std::clog << "\rDone.                   \n";
     }
     catch(...){
         cout << "Caught an unhandled exception\n";
