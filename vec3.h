@@ -106,20 +106,18 @@ inline vec3 unit_vector(const vec3& v){
 }
 
 inline vec3 random_unit_vector(){
-    while(true){
-        vec3 p=vec3::random(-1,1);
-        return unit_vector(p);
-    }
+    vec3 p=vec3::random(-1,1);
+    return unit_vector(p);
 }
 
-inline vec3 random_on_hemisphere(const vec3& normal){
-    vec3 on_unit_sphere=random_unit_vector();
-    if(dot(on_unit_sphere,normal)>0){
-        return on_unit_sphere;
-    }
-    else{
-        return -on_unit_sphere;
-    }
-}
+// inline vec3 random_on_hemisphere(const vec3& normal){
+//     vec3 on_unit_sphere=random_unit_vector();
+//     if(dot(on_unit_sphere,normal)>0){
+//         return on_unit_sphere;
+//     }
+//     else{
+//         return -on_unit_sphere;
+//     }
+// }
 
 #endif
