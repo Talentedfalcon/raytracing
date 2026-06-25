@@ -1,2 +1,2 @@
 Output Render:
-[output](output.jpg)
+![output](output.jpg)
