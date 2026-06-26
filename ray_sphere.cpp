@@ -30,6 +30,11 @@ int main(){
     cam.samples_per_pixel=100;
     cam.max_depth=50;
 
+    cam.vfov=45;
+    cam.lookfrom=point3(1.5,1.5,1);
+    cam.lookat=point3(0,0,-1.5);
+    cam.vup=vec3(0,1,0);
+
     cam.render(world,"temp.ppm");
 
     return 0;
