@@ -35,6 +35,9 @@ int main(){
     cam.lookat=point3(0,0,-1.5);
     cam.vup=vec3(0,1,0);
 
+    cam.defocus_angle=0.5;
+    cam.focus_dist=(cam.lookfrom-cam.lookat).length();
+
     cam.render(world,"temp.ppm");
 
     return 0;
