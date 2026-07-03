@@ -106,7 +106,7 @@ class camera{
             vec3 ray_origin=(defocus_angle<=0)?camera_center:defocus_disk_sample();
             vec3 ray_direction=pixel_sample-ray_origin;
             
-            return ray(camera_center,ray_direction);
+            return ray(ray_origin,ray_direction);
         }
 
         vec3 sample_square() const{
