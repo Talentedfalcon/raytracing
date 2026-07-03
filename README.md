@@ -1,2 +1,6 @@
-Output Render:
-![output](output.jpg)
+### `ray_sphere.cpp` Render:
+![output1](./renders/output.jpg)
+
+
+### `random_spheres.cpp` Render:
+![output2](./renders/rand_spheres.jpg)
