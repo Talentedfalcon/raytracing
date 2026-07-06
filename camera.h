@@ -5,6 +5,9 @@
 #include "material.h"
 #include <fstream>
 #include <string>
+#include <vector>
+#include <thread>
+#include <mutex>
 
 class camera{
     public:
@@ -21,34 +24,67 @@ class camera{
         double defocus_angle=0;
         double focus_dist=10;
 
-        int render(const hittable& world,const std::string& file_name){
+        void scanline_thread_func(const hittable& world,std::ofstream& outFile, const int seek_offset,const int start,const int end){
+            for(int y=start;y<end;y++){
+                std::clog << "\rScanline remaining:" << (end-y) << " " << std::flush;
+                for(int x=0;x<image_width;x++){
+                    color pixel_color(0,0,0);
+                    for(int sample=0;sample<samples_per_pixel;sample++){
+                        ray r=get_ray(x,y);
+                        pixel_color+=ray_color(r,max_depth,world);
+                    }
+                    int index=y*image_width+x;
+                    mtx.lock();
+                    outFile.seekp(seek_offset+index*3,std::ios::beg);
+                    write_color(outFile,pixel_samples_scale*pixel_color);
+                    mtx.unlock();
+                }
+            }
+            std::clog << "\nThread " << std::this_thread::get_id() << " complete" << std::endl;
+        }
+
+        int render(const hittable& world,const std::string& file_name, int num_threads=4){
             initialize();
             std::ofstream outFile(file_name,std::ios::binary);
 
-            try{
-                if(!outFile){
-                    std::cerr << "Error: Could not open file for writing" << std::endl;
-                    return 1;
-                }
-                outFile << "P6\n" << image_width << " " << image_height << "\n255\n";
+            std::vector<std::thread> threads;
 
-                for(int y=0;y<image_height;y++){
-                    std::clog << "\rScanline remaining:" << (image_height-y) << " " << std::flush;
-                    for(int x=0;x<image_width;x++){
-                        color pixel_color(0,0,0);
-                        for(int sample=0;sample<samples_per_pixel;sample++){
-                            ray r=get_ray(x,y);
-                            pixel_color+=ray_color(r,max_depth,world);
-                        }
-                        write_color(outFile,pixel_samples_scale*pixel_color);
-                    }
+            if(!outFile){
+                std::cerr << "Error: Could not open file for writing" << std::endl;
+                return 1;
+            }
+            outFile << "P6\n" << image_width << " " << image_height << "\n255\n";
+
+            int seek_offset=9+get_num_digits(image_width)+get_num_digits(image_height);
+
+            int start=0;
+            int divisions=image_height/num_threads;
+            for(int i=0;i<num_threads;i++){
+                int end=start+divisions;
+                if(i==num_threads-1){
+                    end=image_height;
                 }
-                outFile.close();
-                std::clog << "\rDone.                   \n";
+                threads.emplace_back(
+                    &camera::scanline_thread_func,
+                    this,
+                    std::ref(world),
+                    std::ref(outFile),
+                    seek_offset,
+                    start,
+                    end
+                );
+                start=end;
             }
-            catch(...){
-                std::cout << "Caught an unhandled exception\n";
+
+            for(std::thread& t: threads){
+                if(t.joinable()){
+                    t.join();
+                }
             }
+
+            outFile.close();
+            std::clog << "\rDone.                   \n";
+
             return 0;
         }
         
@@ -64,6 +100,8 @@ class camera{
 
         vec3 defocus_disk_u;
         vec3 defocus_disk_v;
+
+        std::mutex mtx;
 
         void initialize(){
             image_height=int(image_width/aspect_ratio);

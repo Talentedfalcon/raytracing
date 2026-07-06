@@ -22,6 +22,15 @@ inline double random_double(double min, double max){
     return min+(max-min)*random_double();
 }
 
+inline int get_num_digits(int n){
+    int digits=0;
+    while(n){
+        digits+=1;
+        n/=10;
+    }
+    return digits;
+}
+
 #include "color.h"
 #include "interval.h"
 #include "ray.h"

@@ -38,7 +38,7 @@ int main(){
     cam.defocus_angle=10.0;
     cam.focus_dist=(cam.lookfrom-cam.lookat).length();
 
-    cam.render(world,"./renders/temp.ppm");
+    cam.render(world,"./renders/temp.ppm",8);
 
     return 0;
 }
