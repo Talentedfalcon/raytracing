@@ -24,25 +24,6 @@ class camera{
         double defocus_angle=0;
         double focus_dist=10;
 
-        void scanline_thread_func(const hittable& world,std::ofstream& outFile, const int seek_offset,const int start,const int end){
-            for(int y=start;y<end;y++){
-                std::clog << "\rScanline remaining:" << (end-y) << " " << std::flush;
-                for(int x=0;x<image_width;x++){
-                    color pixel_color(0,0,0);
-                    for(int sample=0;sample<samples_per_pixel;sample++){
-                        ray r=get_ray(x,y);
-                        pixel_color+=ray_color(r,max_depth,world);
-                    }
-                    int index=y*image_width+x;
-                    mtx.lock();
-                    outFile.seekp(seek_offset+index*3,std::ios::beg);
-                    write_color(outFile,pixel_samples_scale*pixel_color);
-                    mtx.unlock();
-                }
-            }
-            std::clog << "\nThread " << std::this_thread::get_id() << " complete" << std::endl;
-        }
-
         int render(const hittable& world,const std::string& file_name, int num_threads=4){
             initialize();
             std::ofstream outFile(file_name,std::ios::binary);
@@ -132,6 +113,25 @@ class camera{
             double defocus_radius=focus_dist*std::tan(degrees_to_radians(defocus_angle/2));
             defocus_disk_u=u*defocus_radius;
             defocus_disk_v=v*defocus_radius;
+        }
+
+        void scanline_thread_func(const hittable& world,std::ofstream& outFile, const int seek_offset,const int start,const int end){
+            for(int y=start;y<end;y++){
+                std::clog << "\rScanline remaining:" << (end-y) << " " << std::flush;
+                for(int x=0;x<image_width;x++){
+                    color pixel_color(0,0,0);
+                    for(int sample=0;sample<samples_per_pixel;sample++){
+                        ray r=get_ray(x,y);
+                        pixel_color+=ray_color(r,max_depth,world);
+                    }
+                    int index=y*image_width+x;
+                    mtx.lock();
+                    outFile.seekp(seek_offset+index*3,std::ios::beg);
+                    write_color(outFile,pixel_samples_scale*pixel_color);
+                    mtx.unlock();
+                }
+            }
+            std::clog << "\nThread " << std::this_thread::get_id() << " complete" << std::endl;
         }
 
         ray get_ray(int x,int y) const{
