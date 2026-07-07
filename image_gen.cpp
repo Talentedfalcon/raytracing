@@ -1,5 +1,5 @@
-#include "vec3.h"
-#include "color.h"
+#include "./rt_headers/vec3.h"
+#include "./rt_headers/color.h"
 
 #include <iostream>
 #include <fstream>

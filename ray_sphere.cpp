@@ -1,10 +1,10 @@
-#include "raytrace.h"
-#include "camera.h"
+#include "./rt_headers/raytrace.h"
+#include "./rt_headers/camera.h"
 
-#include "hittable.h"
-#include "hittable_list.h"
-#include "material.h"
-#include "sphere.h"
+#include "./rt_headers/hittable.h"
+#include "./rt_headers/hittable_list.h"
+#include "./rt_headers/material.h"
+#include "./rt_headers/sphere.h"
 
 int main(){
     hittable_list world;
