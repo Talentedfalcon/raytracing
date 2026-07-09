@@ -5,6 +5,7 @@
 #include "./rt_headers/hittable_list.h"
 #include "./rt_headers/material.h"
 #include "./rt_headers/sphere.h"
+#include "./rt_headers/bvh.h"
 
 int main(){
     hittable_list world;
@@ -22,6 +23,8 @@ int main(){
     world.add(std::make_shared<sphere>(point3(-1,0,-1.5),0.5,mat_gold));
     world.add(std::make_shared<sphere>(point3(0.25,0,-1.0),0.4,mat_glass));
     world.add(std::make_shared<sphere>(point3(0.25,0,-1.0),0.3,mat_bubble));
+
+    world=hittable_list(std::make_shared<bvh_node>(world));
 
     camera cam;
 

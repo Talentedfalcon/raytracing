@@ -12,6 +12,10 @@ class interval{
             this->min=min;
             this->max=max;
         }
+        interval(const interval& a, const interval& b){
+            min=a.min<=b.min? a.min : b.min;
+            max=a.max>=b.max? a.max : b.max;
+        }
 
         double size() const{
             return max-min;
@@ -33,6 +37,11 @@ class interval{
                 return max;
             }
             return x;
+        }
+
+        interval expand(double delta) const{
+            double padding=delta/2;
+            return interval(min-padding,max+padding);
         }
 
         static const interval empty, universe;
