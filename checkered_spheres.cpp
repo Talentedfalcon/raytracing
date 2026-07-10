@@ -17,6 +17,8 @@ int main(){
     world.add(std::make_shared<sphere>(point3(0,-10,0),10,checker_mat));
     world.add(std::make_shared<sphere>(point3(0,10,0),10,checker_mat));
 
+    hittable_list world=hittable_list(std::make_shared<bvh_node>(world));
+
     camera cam;
 
     cam.aspect_ratio=16.0/9.0;

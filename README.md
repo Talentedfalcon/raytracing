@@ -10,3 +10,6 @@
 
 ### `checkered_spheres.cpp` Render:
 ![output4](./renders/checker_spheres.jpg)
+
+### `earth.cpp` Render:
+![output5](./renders/earth.jpg)
