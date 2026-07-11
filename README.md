@@ -13,3 +13,6 @@
 
 ### `earth.cpp` Render:
 ![output5](./renders/earth.jpg)
+
+### `noise_sphere.cpp` Render:
+![output6](./renders/noise.jpg)
