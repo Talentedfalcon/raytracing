@@ -74,12 +74,17 @@ class noise_texture: public texture{
     private:
         perlin noise;
         double scale;
+        double turbulence;
     public:
-        noise_texture(double scale){
+        noise_texture(double scale, double turbulence=0){
             this->scale=scale;
+            this->turbulence=turbulence;
         }
         
         color value(double u, double v, const point3& p) const override{
+            if(turbulence){
+                return color(0.5,0.5,0.5)*(1+std::sin(scale*p.z()+10*noise.turb(p,turbulence)));
+            }
             return color(1,1,1)*0.5*(1.0+noise.noise(scale*p));
         }
 };

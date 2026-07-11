@@ -30,7 +30,7 @@ class perlin{
             double vv=v*v*(3-2*v);
             double ww=w*w*(3-2*w);
             
-            double accum=0.0;
+            double accum=0;
             for(int i=0;i<2;i++){
                 for(int j=0;j<2;j++){
                     for(int k=0;k<2;k++){
@@ -78,6 +78,20 @@ class perlin{
             }
 
             return perlin_interp(c,u,v,w);
+        }
+
+        double turb(const point3& p, int depth) const{
+            double accum=0;
+            point3 temp_p=p;
+            double weight=1.0;
+
+            for(int i=0;i<depth;i++){
+                accum+=weight*noise(temp_p);
+                weight*=0.5;
+                temp_p*=2;
+            }
+
+            return std::fabs(accum);
         }
 };
 

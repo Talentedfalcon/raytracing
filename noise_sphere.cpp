@@ -11,7 +11,7 @@ int main(){
     std::srand(static_cast<unsigned int>(time(nullptr)));
     hittable_list world;
 
-    std::shared_ptr<texture> noise_tex=std::make_shared<noise_texture>(4);
+    std::shared_ptr<texture> noise_tex=std::make_shared<noise_texture>(4,7);
     std::shared_ptr<material> noise_mat=std::make_shared<lambertian>(noise_tex);
     world.add(std::make_shared<sphere>(point3(0,-1000,0),1000,noise_mat));
     world.add(std::make_shared<sphere>(point3(0,2,0),2,noise_mat));
@@ -32,5 +32,5 @@ int main(){
 
     world=hittable_list(std::make_shared<bvh_node>(world));
 
-    cam.render(world,"./renders/noise.ppm",12);
+    cam.render(world,"./renders/noise.ppm",16);
 }
