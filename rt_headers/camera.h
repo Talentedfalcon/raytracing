@@ -173,6 +173,7 @@ class camera{
             }
             vec3 unit_dir=unit_vector(r.direction());
             double a=0.5*(unit_dir.y()+1.0);
+            //Returns color for background/sky
             return (1.0-a)*color(1,1,1)+a*color(0.5,0.7,1);
         }
 };
