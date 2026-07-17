@@ -8,6 +8,10 @@ class material{
     public:
         virtual ~material() = default;
 
+        virtual color emitted(double u, double v, const point3& p) const{
+            return color(0,0,0);
+        }
+        
         virtual bool scatter(const ray& r_in, const hit_record& rec, color& attenuation, ray& scattered) const{
             return false;
         }
@@ -40,7 +44,6 @@ class metal: public material{
     private:
         color albedo;
         double fuzz;
-        
     public:
         metal(const color& albedo, double fuzz){
             this->albedo=albedo;
@@ -90,6 +93,22 @@ class dielectric: public material{
             }
             scattered=ray(rec.p,out_direction,r_in.time());
             return true;
+        }
+};
+
+class diffuse_light: public material{
+    private:
+        std::shared_ptr<texture> tex;
+    public:
+        diffuse_light(const color& emit){
+            tex=std::make_shared<solid_color>(emit);
+        }
+        diffuse_light(std::shared_ptr<texture> tex){
+            this->tex=tex;
+        }
+
+        color emitted(double u, double v, const point3& p) const override{
+            return tex->value(u,v,p);
         }
 };
 

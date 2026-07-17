@@ -18,3 +18,6 @@
 
 ### `ray_quad.cpp` Render:
 ![output7](./renders/quads.jpg)
+
+### `lights.cpp` Render:
+![output8](./renders/lights.jpg)

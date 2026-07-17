@@ -15,6 +15,10 @@ class camera{
         int image_width=100;
         int samples_per_pixel=10;
         int max_depth=10;
+        
+        color background_a=color(0.5,0.7,1);
+        color background_b=color(1,1,1);
+        bool bg_is_gradient=true;
 
         double vfov=90;
         point3 lookfrom=point3(0,0,0);
@@ -163,18 +167,25 @@ class camera{
             }
 
             hit_record rec;
-            if(world.hit(r,interval(0.001,infinity),rec)){
-                ray scattered;
-                color attenuation;
-                if(rec.mat->scatter(r,rec,attenuation,scattered)){
-                    return attenuation*ray_color(scattered,depth-1,world);
+            if(!world.hit(r,interval(0.001,infinity),rec)){
+                //For a solid-color background
+                if(!bg_is_gradient){
+                    return background_a;
                 }
-                return color();
+                //For a gradient background 
+                vec3 unit_dir=unit_vector(r.direction());
+                double a=0.5*(unit_dir.y()+1.0);
+                return a*background_a+(1.0-a)*background_b;
             }
-            vec3 unit_dir=unit_vector(r.direction());
-            double a=0.5*(unit_dir.y()+1.0);
-            //Returns color for background/sky
-            return (1.0-a)*color(1,1,1)+a*color(0.5,0.7,1);
+
+            ray scattered;
+            color attenuation;
+            color color_from_emission=rec.mat->emitted(rec.u,rec.v,rec.p);
+            if(!rec.mat->scatter(r,rec,attenuation,scattered)){
+                return color_from_emission;
+            }
+            color color_from_scatter=attenuation*ray_color(scattered,depth-1,world);
+            return color_from_emission+color_from_scatter;
         }
 };
 
