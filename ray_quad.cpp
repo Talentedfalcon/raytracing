@@ -29,12 +29,18 @@ int main(){
     world.add(std::make_shared<sphere>(point3(0,-1,3),1,glass_ball));
     world.add(std::make_shared<sphere>(point3(0,1,2),1,metal_ball));
 
+    std::shared_ptr<material> light=std::make_shared<diffuse_light>(color(20,20,20));
+    world.add(std::make_shared<quad>(point3(-1,2.5,2),vec3(2,0,0),vec3(0,0,2),light));
+
     camera cam;
 
     cam.aspect_ratio      = 16.0/9.0;
     cam.image_width       = 1920;
     cam.samples_per_pixel = 100;
     cam.max_depth         = 50;
+
+    cam.background_a=color(0.01,0.02,0.03);
+    cam.bg_is_gradient=false;
 
     cam.vfov     = 80;
     cam.lookfrom = point3(1,0,7);
