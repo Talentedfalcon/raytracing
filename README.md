@@ -21,3 +21,6 @@
 
 ### `lights.cpp` Render:
 ![output8](./renders/lights.jpg)
+
+### `cornell_box.cpp` Render:
+![output9](./renders/cornell_box.jpg)
