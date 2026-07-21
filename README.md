@@ -24,3 +24,6 @@
 
 ### `cornell_box.cpp` Render:
 ![output9](./renders/cornell_box.jpg)
+
+### `smoke.cpp` Render:
+![output10](./renders/smoke.jpg)
