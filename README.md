@@ -27,3 +27,6 @@
 
 ### `smoke.cpp` Render:
 ![output10](./renders/smoke.jpg)
+
+### `all_in.cpp` Render:
+![output11](./renders/all_in.jpg)
