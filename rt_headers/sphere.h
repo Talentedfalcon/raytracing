@@ -74,4 +74,16 @@ class sphere: public hittable{
         }
 };
 
+inline std::shared_ptr<hittable_list> black_hole(const point3& center, double r_singularity, double r_ergosphere){
+    std::shared_ptr<hittable_list> object=std::make_shared<hittable_list>();
+
+    std::shared_ptr<material>mat_singularity=std::make_shared<lambertian>(color(0,0,0));
+    std::shared_ptr<material>mat_ergosphere=std::make_shared<dielectric>(1.7);
+
+    object->add(std::make_shared<sphere>(center,r_singularity,mat_singularity));    //The Singularity Sphere
+    object->add(std::make_shared<sphere>(center,r_ergosphere,mat_ergosphere));      //The Ergosphere
+
+    return object;
+}
+
 #endif

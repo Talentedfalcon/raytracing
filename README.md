@@ -30,3 +30,6 @@
 
 ### `all_in.cpp` Render:
 ![output11](./renders/all_in.jpg)
+
+### `black_hole.cpp` Render:
+![output12](./renders/black_hole.jpg)
