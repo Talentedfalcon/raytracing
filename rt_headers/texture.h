@@ -140,4 +140,42 @@ class linear_gradient_texture: public texture{
         }
 };
 
+class radial_gradient_texture: public texture{
+    private:
+        std::vector<color> colors;
+    public:
+        radial_gradient_texture(const color& color_a, const color& color_b){
+            this->colors.push_back(color_a);
+            this->colors.push_back(color_b);
+            this->colors.push_back(color_b);
+        }
+        radial_gradient_texture(const std::vector<color>& colors){
+            this->colors=colors;
+            this->colors.push_back(colors[colors.size()-1]);
+        }
+
+        color value(double u, double v, const point3& p) const override{
+            v-=0.5;
+            u-=0.5;
+            v=hypot(v,u);
+            u=atan2(v,u);
+            double angled=v;
+            // angled+=0.5;
+
+            double spacing=1.0/(colors.size()-1);
+            double start_idx=0;
+            double end_idx=spacing;
+            for(int i=0;i<colors.size()-1;i++){
+                if(angled>=start_idx && angled<=end_idx){
+                    angled=(angled-start_idx)/(end_idx-start_idx);
+                    return colors[i+1]*angled+(1-angled)*colors[i];
+                }
+                start_idx=end_idx;
+                end_idx+=spacing;
+            }
+            
+            return color();
+        }
+};
+
 #endif

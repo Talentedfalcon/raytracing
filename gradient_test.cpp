@@ -18,9 +18,13 @@ int main(){
     
     for(int i=0;i<6;i++){
         std::shared_ptr<texture> linear_grad=std::make_shared<linear_gradient_texture>(grad_colors,angles[i]);
-        world.add(std::make_shared<quad>(vec3(35*(i-3),20,0),vec3(30,0,0),vec3(0,30,0),std::make_shared<diffuse_light>(linear_grad)));
-        world.add(std::make_shared<sphere>(point3(35*(i-3)+15,-20,0),15,std::make_shared<diffuse_light>(linear_grad)));
+        world.add(std::make_shared<quad>(vec3(35*(i-3),30,0),vec3(30,0,0),vec3(0,30,0),std::make_shared<diffuse_light>(linear_grad)));
+        world.add(std::make_shared<sphere>(point3(35*(i-3)+15,0,0),15,std::make_shared<diffuse_light>(linear_grad)));
     }
+    
+    std::shared_ptr<texture> radial_grad=std::make_shared<radial_gradient_texture>(grad_colors);
+    world.add(std::make_shared<quad>(vec3(-35,-55,0),vec3(30,0,0),vec3(0,30,0),std::make_shared<diffuse_light>(radial_grad)));
+    world.add(std::make_shared<sphere>(point3(15,-40,0),15,std::make_shared<diffuse_light>(radial_grad)));
 
     world=hittable_list(std::make_shared<bvh_node>(world));
 
