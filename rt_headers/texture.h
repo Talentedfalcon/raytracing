@@ -3,6 +3,7 @@
 
 #include "rtw_stb_image.h"
 #include "perlin.h"
+#include <vector>
 
 class texture{
     public:
@@ -75,17 +76,67 @@ class noise_texture: public texture{
         perlin noise;
         double scale;
         double turbulence;
+        color color_a=color(1,1,1);
+        color color_b=color(0,0,0);
     public:
         noise_texture(double scale, double turbulence=0){
             this->scale=scale;
             this->turbulence=turbulence;
         }
+        noise_texture(double scale, const color& color_a, const color& color_b, double turbulence=0){
+            this->scale=scale;
+            this->turbulence=turbulence;
+            this->color_a=color_a;
+            this->color_b=color_b;
+        }
         
         color value(double u, double v, const point3& p) const override{
+            double multiplier=0.0;
             if(turbulence){
-                return color(0.5,0.5,0.5)*(1+std::sin(scale*p.z()+10*noise.turb(p,turbulence)));
+                multiplier=(1+std::sin(scale*p.z()+10*noise.turb(p,turbulence)));
             }
-            return color(1,1,1)*0.5*(1.0+noise.noise(scale*p));
+            else{
+                multiplier=0.5*(1.0+noise.noise(scale*p));
+            }
+            return color_a*multiplier+color_b*(1.0-multiplier);
+        }
+};
+
+class linear_gradient_texture: public texture{
+    private:
+        std::vector<color> colors;
+        double angle;
+    public:
+        linear_gradient_texture(const color& color_a, const color& color_b, double angle=0){
+            this->colors.push_back(color_a);
+            this->colors.push_back(color_b);
+            this->angle=angle*pi/180;
+        }
+        linear_gradient_texture(const std::vector<color>& colors, double angle=0){
+            this->colors=colors;
+            this->angle=angle*pi/180;
+        }
+
+        color value(double u, double v, const point3& p) const override{
+            v-=0.5;
+            u-=0.5;
+            double scale=abs(cos(angle))+abs(sin(angle));
+            double angled=(v*cos(angle)+u*sin(angle))/scale;
+            angled+=0.5;
+
+            double spacing=1.0/(colors.size()-1);
+            double start_idx=0;
+            double end_idx=spacing;
+            for(int i=0;i<colors.size()-1;i++){
+                if(angled>=start_idx && angled<=end_idx){
+                    angled=(angled-start_idx)/(end_idx-start_idx);
+                    return colors[i+1]*angled+(1-angled)*colors[i];
+                }
+                start_idx=end_idx;
+                end_idx+=spacing;
+            }
+            
+            return color();
         }
 };
 

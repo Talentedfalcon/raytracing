@@ -33,3 +33,6 @@
 
 ### `black_hole.cpp` Render:
 ![output12](./renders/black_hole.jpg)
+
+### `gradient_test.cpp` Render:
+![output13](./renders/gradient_test.jpg)
